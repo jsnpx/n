@@ -1,0 +1,49 @@
+name: Build and Push
+on: [push]
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    permissions:
+      packages: write
+      contents: read
+
+    steps:
+      # 1. Check out the repository code
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      # 2. Setup Node.js and configure the registry
+      - name: Setup Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+          registry-url: 'https://npm.pkg.github.com'
+          scope: '@${{ github.repository_owner }}'
+
+      # 3. Install Dependencies (using npm ci for clean install)
+      - name: Install Dependencies
+        run: npm ci
+        env:
+          NODE_AUTH_TOKEN: ${{ secrets.PERSONAL_TOKEN }}
+
+      # 4. Build the project (uses your "build" script from package.json)
+      # The --if-present flag prevents errors if you don't have a build script
+      - name: Build
+        run: npm run build --if-present
+
+      # 5. Publish to npm
+      - name: Unpublish
+        run: npm unpublish -f
+        continue-on-error: true
+        env:
+          # This pulls the token from your GitHub Repository Secrets
+          NODE_AUTH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+      # 6. Publish to npm
+      - name: Publish
+        run: npm publish --access public
+        env:
+          # This pulls the token from your GitHub Repository Secrets
+          NODE_AUTH_TOKEN: ${{ secrets.GITHUB_TOKEN }}

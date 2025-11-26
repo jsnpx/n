@@ -1,0 +1,34 @@
+{
+  "name": "@jsnpx/n",
+  "version": "0.0.1",
+  "description": "Normalize snippets, local files into base64 strings and files",
+  "main": "./dist/index.cjs",
+  "module": "./dist/index.js",
+  "type": "module",
+  "source": "src/index.js",
+  "exports": {
+    ".": {
+      "import": "./dist/index.js",
+      "require": "./dist/index.cjs"
+    }
+  },
+  "bin": {
+    "@jsnpx/n": "./dist/bin.js"
+  },
+  "scripts": {
+    "build": "tsup"
+  },
+  "publishConfig": {
+    "registry": "https://npm.pkg.github.com"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "@jsnpx/u": "^0.0.1"
+  },
+  "devDependencies": {
+    "tsup": "^8.5.1",
+    "typescript": "^5.9.3"
+  }
+}
